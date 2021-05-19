@@ -1,0 +1,294 @@
+Code 1:
+<Window x:Class="CustomComboBox.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525">
+    <Window.Resources>
+
+    </Window.Resources>
+    <Grid>      
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />            
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Grid.Row="0" Content="Select the months:" />
+            <Label Grid.Column="1" Grid.Row="1" Content="Months selected:" />
+            <ComboBox x:Name="ComboBoxMonths" Grid.Column="0" Grid.Row="1">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding Path=monthSelected}" VerticalAlignment="Center" Margin="0,0,4,0" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" />
+                            <TextBlock Text="{Binding monthName}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <ListBox x:Name="ListBoxMonthsChecked" Grid.Column="1" Grid.Row="2">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding monthName}" VerticalAlignment="Center"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>       
+    </Grid>
+
+</Window>
+
+
+
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace CustomComboBox
+{
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        public static ObservableCollection<Month> monthList = new ObservableCollection<Month>();
+        public static ObservableCollection<Month> monthsChecked = new ObservableCollection<Month>();
+
+        public MainWindow()
+        {
+            InitializeComponent();
+
+            this.ComboBoxMonths.ItemsSource = monthList;
+            this.ListBoxMonthsChecked.ItemsSource = monthsChecked;
+
+            //add Months to the ComboBoxMonths
+            monthList.Add(new Month() { monthSelected = false, monthName = "January", monthNumber = 01 });
+            monthList.Add(new Month() { monthSelected = false, monthName = "February", monthNumber = 02 });
+            monthList.Add(new Month() { monthSelected = false, monthName = "March", monthNumber = 03 });            
+            monthList.Add(new Month() { monthSelected = false, monthName = "April", monthNumber = 04 });
+            monthList.Add(new Month() { monthSelected = false, monthName = "May", monthNumber = 05 });
+            monthList.Add(new Month() { monthSelected = false, monthName = "June", monthNumber = 06 });
+            monthList.Add(new Month() { monthSelected = false, monthName = "July", monthNumber = 07 });
+            monthList.Add(new Month() { monthSelected = false, monthName = "August", monthNumber = 08 });
+            monthList.Add(new Month() { monthSelected = false, monthName = "September", monthNumber = 09 });
+            monthList.Add(new Month() { monthSelected = false, monthName = "October", monthNumber = 10 });
+            monthList.Add(new Month() { monthSelected = false, monthName = "November", monthNumber = 11 });
+            monthList.Add(new Month() { monthSelected = false, monthName = "December", monthNumber = 12 });
+        }
+
+        public class Month
+        {
+            public string monthName { get; set; } 
+            public int monthNumber { get; set; } 
+
+            private bool _monthSelected;
+            public bool monthSelected //the checkbox is bound to this
+            {
+                get
+                {
+                    return _monthSelected;
+                }
+                set
+                {
+                    if (value != this._monthSelected)
+                    {
+                        _monthSelected = value;                        
+                    }
+                }
+            }
+
+        }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            monthsChecked.Clear();
+            foreach (Month m in monthList)
+            {
+                if (m.monthSelected == true)
+                {                    
+                    monthsChecked.Add(m);
+                }
+            }            
+        }
+
+        private void CheckBox_UnChecked(object sender, RoutedEventArgs e)
+        {
+            monthsChecked.Clear();
+            foreach (Month m in monthList)
+            {
+                if (m.monthSelected == true)
+                {
+                    monthsChecked.Add(m);
+                }
+            }
+        }
+
+    }
+}
+
+Code 2
+<Grid>
+        <ComboBox x:Name="Checkbox" SelectionChanged="Checkbox_SelectionChanged">
+            <ComboBox.Items>
+                <CheckBox Content="Test1"/>
+                <CheckBox Content="Test2"/>
+                <CheckBox Content="Test3"/>
+            </ComboBox.Items>
+        </ComboBox>
+        <TextBlock IsHitTestVisible="False" Text="My Text" VerticalAlignment="Center" Margin="5"/>
+    </Grid>
+
+
+Code 3:
+<ComboBox Height="30" TextBoxBase.TextChanged="ddlCountry_TextChanged" HorizontalAlignment="Left" VerticalAlignment="Top" Name="ddlCountry" IsEditable="True" IsTextSearchEnabled="True" StaysOpenOnEdit="True" Width="165" SelectionChanged="ddlCountry_SelectionChanged" Margin="78,139,0,0">  
+    <ComboBox.ItemTemplate>  
+        <DataTemplate>  
+            <CheckBox Name="chkCountry" Width="220" Checked="AllCheckbocx_CheckedAndUnchecked" Unchecked="AllCheckbocx_CheckedAndUnchecked" Content="{Binding Country_Name}" IsChecked="{Binding Check_Status}" CommandParameter="{Binding Country_ID}">  
+            </CheckBox>  
+        </DataTemplate>  
+    </ComboBox.ItemTemplate>  
+</ComboBox>  
+  
+<ListBox Name="testListbox" HorizontalAlignment="Left" Height="161" Margin="370,80,0,0" VerticalAlignment="Top" Width="100" /> 
+
+
+
+
+public class DDL_Country  
+{  
+    public int Country_ID   
+  {  
+        get;  
+        set;  
+    }  
+    public string Country_Name   
+    {  
+        get;  
+        set;  
+    }  
+    public Boolean Check_Status   
+    {  
+        get;  
+        set;  
+    }  
+}  
+
+
+
+
+using System;  
+using System.Collections.Generic;  
+using System.Windows;  
+using System.Windows.Controls;  
+using System.Linq;  
+  
+namespace MultiSelectCombobox  
+{  
+    /// <summary>  
+    /// Interaction logic for MainWindow.xaml  
+    /// </summary>  
+    public partial class MainWindow: Window   
+    {  
+        List < DDL_Country > objCountryList;  
+  
+        public MainWindow()  
+        {  
+            InitializeComponent();  
+            objCountryList = new List < DDL_Country > ();  
+            AddElementsInList();  
+            BindCountryDropDown();  
+        }  
+  
+  
+        private void BindCountryDropDown()  
+        {  
+            ddlCountry.ItemsSource = objCountryList;  
+        }  
+        private void ddlCountry_SelectionChanged(object sender, SelectionChangedEventArgs e)  
+        {  
+  
+        }  
+  
+        private void ddlCountry_TextChanged(object sender, TextChangedEventArgs e)  
+        {  
+            ddlCountry.ItemsSource = objCountryList.Where(x => x.Country_Name.StartsWith(ddlCountry.Text.Trim()));  
+        }  
+  
+        private void AllCheckbocx_CheckedAndUnchecked(object sender, RoutedEventArgs e)  
+        {  
+            BindListBOX();  
+        }  
+  
+        private void BindListBOX()  
+        {  
+            testListbox.Items.Clear();  
+            foreach(var country in objCountryList)  
+            {  
+                if (country.Check_Status == true)  
+                {  
+                    testListbox.Items.Add(country.Country_Name);  
+                }  
+            }  
+        }  
+  
+        private void AddElementsInList()   
+        {  
+            // 1 element  
+            DDL_Country obj = new DDL_Country();  
+            obj.Country_ID = 10;  
+            obj.Country_Name = "India";  
+            objCountryList.Add(obj);  
+            obj = new DDL_Country();  
+            obj.Country_ID = 11;  
+            obj.Country_Name = "Pakistan";  
+            objCountryList.Add(obj);  
+            obj = new DDL_Country();  
+            obj.Country_ID = 12;  
+            obj.Country_Name = "America";  
+            objCountryList.Add(obj);  
+            obj = new DDL_Country();  
+            obj.Country_ID = 13;  
+            obj.Country_Name = "U.K";  
+            objCountryList.Add(obj);  
+            obj = new DDL_Country();  
+            obj.Country_ID = 14;  
+            obj.Country_Name = "Arab";  
+            objCountryList.Add(obj);  
+        }  
+    }  
+  
+    public class DDL_Country  
+    {  
+        public int Country_ID   
+      {  
+            get;  
+            set;  
+        }  
+        public string Country_Name  
+        {  
+            get;  
+            set;  
+        }  
+        public Boolean Check_Status  
+        {  
+            get;  
+            set;  
+        }  
+    }  
+}  
